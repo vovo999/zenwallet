@@ -1,6 +1,10 @@
 // @flow
 
 import bech32 from 'bech32'
+import { Hash } from '@zen/zenjs/build/src/Types'
+import Data from '@zen/zenjs/build/src/Data'
+import { sha3_256 as sha } from 'js-sha3'
+import BigInteger from 'bigi'
 
 import db from '../services/db'
 import { ZEN_ASSET_NAME, ZEN_ASSET_HASH } from '../constants'
@@ -43,6 +47,29 @@ export const isValidAddress = (address: ?string, type?: 'contract' | 'pubKey' = 
     // console.error('validateAddress err', err)
     return false
   }
+}
+
+export const isValidHex = (hex: string): boolean => /[0-9a-f]{40}/g.test(hex)
+
+export const updateHash = (commitID: string, interval = 0): Hash => {
+  const bigiInterval = new Data.UInt32(BigInteger.valueOf(interval))
+  const commit = new Data.String(commitID)
+  return new Hash(sha
+    .update(sha(Data.serialize(bigiInterval)))
+    .update(sha(Data.serialize(commit)))
+    .hex()).hash
+}
+
+export const payloadData = (address, messagebody: Data.Dictionary) => {
+  console.log(messagebody.getSize())
+  const data = {
+    address,
+    options: {
+      returnAddress: true,
+    },
+    messageBody: messagebody,
+  }
+  return data
 }
 
 export const getNamefromCodeComment = (code: string) => {

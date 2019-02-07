@@ -1,9 +1,14 @@
 import { observable, action, runInAction } from 'mobx'
 
-import { getPublicAddress, getPublicPkHash } from '../services/api-service'
+import {
+  getPublicAddress,
+  getPublicPkHash,
+  postWalletKeys,
+} from '../services/api-service'
 
 class PublicAddressStore {
     @observable address = ''
+    @observable addresses = []
     @observable addressError = ''
     @observable showingPkHash = false
     @observable pkHash = ''
@@ -20,6 +25,20 @@ class PublicAddressStore {
         })
       } catch (err) {
         console.error('error getting public address', err)
+        runInAction(() => { this.addressError = 'Error getting public address' })
+      }
+    }
+
+    @action.bound
+    async runWalletKeys(password) {
+      try {
+        const walletKeys = await postWalletKeys(password)
+        runInAction(() => {
+          this.addresses = walletKeys
+          this.addressError = ''
+        })
+      } catch (err) {
+        console.error('error getting public addresses', err)
         runInAction(() => { this.addressError = 'Error getting public address' })
       }
     }

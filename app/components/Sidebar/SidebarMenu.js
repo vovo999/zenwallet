@@ -20,6 +20,7 @@ class SidebarMenu extends Component<Props> {
           <Online><li> <NavLink to={routes.ACTIVE_CONTRACTS} activeClassName="active">Active Contracts</NavLink></li></Online>
           <li> <NavLink to={routes.SAVED_CONTRACTS} activeClassName="active">Saved Contracts</NavLink></li>
           <Online><li> <NavLink to={routes.BLOCKCHAIN_LOGS} activeClassName="active">Blockchain Logs</NavLink></li></Online>
+          <li> <NavLink to={routes.AUTHORIZED_PROTOCOL} activeClassName="active">Authorized Protocol</NavLink></li>
           <li> <NavLink to={routes.SETTINGS} activeClassName="active">Settings</NavLink></li>
         </ul>
       </div>
